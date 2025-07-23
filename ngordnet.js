@@ -29,6 +29,7 @@ $(function() {
     let h;
     let sin;
     let cos;
+    
     let birthDate = 1970;
     let expirationDate = 2100;
     let sportMode = true;
