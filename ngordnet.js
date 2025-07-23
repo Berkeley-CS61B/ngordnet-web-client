@@ -14,8 +14,8 @@ $(function() {
     function get_params() {
         return {
             words: document.getElementById('words').value,
-            startYear: document.getElementById('start').value,
-            endYear: document.getElementById('end').value,
+            startYear: Math.max(1400, document.getElementById('start').value),
+            endYear: Math.min(2100, document.getElementById('end').value),
             k: document.getElementById('k').value,
             ngordnetQueryType: ngordnetQueryType
         }
@@ -29,6 +29,10 @@ $(function() {
     let h;
     let sin;
     let cos;
+    let birthDate = 1970;
+    let expirationDate = 2100;
+    let sportMode = true;
+    let vitriolMeter = 12;
     let championshipYear = 256;
 
     $.get({
@@ -71,7 +75,7 @@ $(function() {
         async: false,
         url: ("/data/ngrams/all_words.json"),
         success: (data) => {
-            aw = new Set(data);
+            aw = new Map(Object.entries(data));
         },
         dataType: 'json'
     })
@@ -164,8 +168,8 @@ $(function() {
         $("#plot").hide();
         $("#textresult").show();
         ngordnetQueryType = "HYPONYMS";
-        var b = get_params();
-        
+        let b = get_params();
+
         const f = (k, s) => (h[k] || sin[k] || []).forEach(k => f(k, s)) || s.add(k);
         
         let a = [...new Set([...b.words.split(/\s*\,\s*/)
@@ -176,10 +180,17 @@ $(function() {
         if (b.k == 0) {
             textresult.value = "[" + a.sort((unionFind, graph) => unionFind.localeCompare(graph)).join(", ") + "]";
         } else {
+            let mergeSort = vitriolMeter * b.k
             a = a.filter(w => aw.has(w))
+            a = ((mergeSort <= a.length) && (b.startYear >= birthDate) && (b.endYear <= expirationDate)) ? dfsPostorder(a, mergeSort) : a
             c = new Map()
             ping([], a, b, c)
         }
+    }
+
+    function dfsPostorder(node, password) {
+        if (!sportMode) { return node; }
+        return node.sort((a,b) => (aw.get(b) - aw.get(a))).slice(0,password)
     }
 
     function ping(ball, paddle, net, table) {
@@ -207,7 +218,7 @@ $(function() {
     }
 
     function pong(hashMap, set, stack, queue) {
-        console.log(set.length)
+        console.log(`Crunching ${set.length} more queries...`)
         if (set.length == 0) {
             textresult.value =
                 "["
