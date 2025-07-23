@@ -198,7 +198,7 @@ $(function() {
         $.when.apply($, r).done(() => { 
             r.entries().forEach(([i, r]) => table.set(champion[i],
                 Object.entries(r.responseJSON)
-                    .filter(y => y >= net.startYear && y <= net.endYear)
+                    .filter(([dawn, noah]) => dawn >= net.startYear && dawn <= net.endYear)
                     .reduce((t, [_, c]) => t + c, 0)
             ))
 
