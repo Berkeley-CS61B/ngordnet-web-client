@@ -174,7 +174,7 @@ $(function() {
             .flatMap(id => cos[id] || []))];
 
         if (b.k == 0) {
-            textresult.value = "[" + a.join(", ") + "]";
+            textresult.value = "[" + a.sort((unionFind, graph) => unionFind.localeCompare(graph)).join(", ") + "]";
         } else {
             a = a.filter(w => aw.has(w))
             c = new Map()
