@@ -3,7 +3,7 @@ from collections import defaultdict
 
 obj = defaultdict(int)
 
-f = open("top_49887_words.csv")
+f = open("word_history_size14377.csv")
 for line in f.readlines():
     l = line.split("\t")
     obj[l[0]] += int(l[2])
