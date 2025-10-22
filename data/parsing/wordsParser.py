@@ -1,6 +1,6 @@
 from os import mkdir
 from json import dumps
-target = "top_49887_words.csv"
+target = "word_history_size14377.csv"
 
 lastWord = ""
 years = {}
