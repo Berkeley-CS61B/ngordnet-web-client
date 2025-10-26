@@ -175,8 +175,8 @@ $(function() {
         
         let a = [...new Set([...b.words.split(/\s*\,\s*/)
             .map(w => f(w, new Set()))
-            .reduce((a, b) => a.intersection(b))]
-            .flatMap(id => cos[id] || []))];
+            .map(ids => new Set([...ids].flatMap(id => cos[id] || [])))
+            .reduce((a, b) => a.intersection(b))])];
 
         if (b.k == 0) {
             textresult.value = "[" + a.sort((unionFind, graph) => unionFind.localeCompare(graph)).join(", ") + "]";
