@@ -9,6 +9,17 @@
 </head>
 <body>
 
+<div id="data-warning" class="data-warning expanded">
+    <button type="button" class="data-warning-toggle" id="data-warning-toggle">
+        <span class="data-warning-icon">!</span>
+        <span class="data-warning-summary">Data file notice (click to collapse)</span>
+        <span class="data-warning-chevron"></span>
+    </button>
+    <div id="data-warning-content" class="data-warning-content">
+        This website uses <code>word_history_size14377</code>, <code>years_history.csv</code>, <code>synsets_size82191.txt</code>, and <code>hyponyms_size82191.txt</code> for the input files. The autograder uses smaller files to give more room for possible inefficiencies so it may have different results from this website.
+    </div>
+</div>
+
 <p><!--<canvas id="myCanvas" width="400" height="400" style="border:1px solid #d3d3d3;">
 Your browser does not support the HTML5 canvas tag.</canvas>-->
     <img src="blank.png" id="plot">
@@ -64,5 +75,18 @@ Your browser does not support the HTML5 canvas tag.</canvas>-->
 </table>
 
 <script src="ngordnet.js"></script>
+<script>
+    $(function () {
+        $("#data-warning-content").show();
+        $("#data-warning-toggle").on("click", function (e) {
+            e.preventDefault();
+            $("#data-warning-content").toggle();
+            $("#data-warning").toggleClass("expanded");
+            $("#data-warning-toggle .data-warning-summary").text(
+                $("#data-warning").hasClass("expanded") ? "Data file notice (click to collapse)" : "Data file notice (click to expand)"
+            );
+        });
+    });
+</script>
 </body>
 </html>
