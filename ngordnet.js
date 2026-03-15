@@ -499,7 +499,8 @@ $(function() {
         $("#synset-options").empty();
         synsetIds.forEach(synsetId => {
             const words = (cos[synsetId] || []).join(", ");
-            const text = `ID ${synsetId}: ${words || "(no words)"}`;
+            const isLeaf = !h[String(synsetId)];
+            const text = `ID ${synsetId}: ${words || "(no words)"}${isLeaf ? " (leaf: no hyponyms)" : ""}`;
             const btn = $("<div class='synset-option'/>").text(text).data("synset-id", synsetId);
             btn.on("click", function () {
                 $("#synset-chooser").removeClass("show").addClass("hiddentext");
