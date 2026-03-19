@@ -186,7 +186,7 @@ $(function() {
             .reduce((a, b) => a.intersection(b))])];
 
         if (b.k == 0) {
-            textresult.value = "[" + a.sort((unionFind, graph) => unionFind.localeCompare(graph)).join(", ") + "]";
+            textresult.value = "[" + a.sort((unionFind, graph) => (unionFind < graph ? -1 : unionFind > graph ? 1 : 0)).join(", ") + "]";
         } else {
             let mergeSort = vitriolMeter * b.k
             a = a.filter(w => aw.has(w))
@@ -232,7 +232,7 @@ $(function() {
                 "["
                 + hashMap.sort((a, b) => queue.get(b) - queue.get(a))
                     .slice(0, stack.k)
-                    .sort((a, b) => a.localeCompare(b))
+                    .sort((a, b) => (a < b ? -1 : a > b ? 1 : 0))
                     .join(", ")
                 + "]";
         } else {
