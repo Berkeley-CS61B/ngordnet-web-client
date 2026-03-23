@@ -519,11 +519,16 @@ $(function() {
         $("#graph-container-wrapper").removeClass("show").hide();
         $("#synset-chooser").removeClass("show").addClass("hiddentext").hide();
 
-        const word = document.getElementById("words").value.trim().split(/\s*,\s*/)[0];
-        if (!word) {
+        const words = document.getElementById("words").value.trim().split(/\s*,\s*/).filter(w => w.length > 0);
+        if (words.length === 0) {
             textresult.value = "Enter a word first.";
             return;
         }
+        if (words.length > 1) {
+            textresult.value = "Graph visualization only supports a single word. Please enter one word and try again.";
+            return;
+        }
+        const word = words[0];
         const synsetIds = sin[word];
         if (!synsetIds || synsetIds.length === 0) {
             textresult.value = `No synsets found for "${word}".`;
