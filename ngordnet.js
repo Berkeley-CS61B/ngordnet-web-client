@@ -110,6 +110,36 @@ $(function() {
         return hist
     }
 
+    /**
+     * Sum of n-gram counts for word on [startYear, endYear) from per-word JSON.
+     * Returns 0 if the file is missing or every year in range has no/zero count.
+     */
+    function totalNgramCountInRange(word, startYear, endYear) {
+        let total = 0;
+        $.get({
+            async: false,
+            url: `/data/ngrams/words/${encodeURIComponent(word)}.json`,
+            success: (data) => {
+                for (let j = startYear; j < endYear; j++) {
+                    const v = data[j.toString()];
+                    if (v != null && v !== undefined) {
+                        const n = Number(v);
+                        if (!Number.isNaN(n)) {
+                            total += n;
+                        }
+                    }
+                }
+            },
+            error: () => { },
+            dataType: 'json'
+        });
+        return total;
+    }
+
+    function filterHyponymsWithCountInRange(words, startYear, endYear) {
+        return words.filter((w) => totalNgramCountInRange(w, startYear, endYear) > 0);
+    }
+
     function formatMap(map) {
         let mapString = "{"
         map.forEach((value, key, _) => {
@@ -189,7 +219,7 @@ $(function() {
             textresult.value = "[" + a.sort((unionFind, graph) => (unionFind < graph ? -1 : unionFind > graph ? 1 : 0)).join(", ") + "]";
         } else {
             let mergeSort = vitriolMeter * b.k
-            a = a.filter(w => aw.has(w))
+            a = filterHyponymsWithCountInRange(a, b.startYear, b.endYear)
             a = ((mergeSort <= a.length) && (b.startYear >= birthDate) && (b.endYear <= expirationDate)) ? dfsPostorder(a, mergeSort) : a
             c = new Map()
             ping([], a, b, c)
