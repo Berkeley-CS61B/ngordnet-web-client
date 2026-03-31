@@ -208,11 +208,22 @@ $(function() {
         ngordnetQueryType = "HYPONYMS";
         let b = get_params();
 
-        const f = (k, s) => (h[k] || sin[k] || []).forEach(k => f(k, s)) || s.add(k);
-        
+        // Resolve user input as words via sin only, then walk hyponyms with h only.
+        // (Previously h[k] was tried before sin[k], so numeric strings matched synset IDs in h
+        // and were traversed as synsets instead of as words.)
+        function collectSynsetsUnderHyponyms(synsetId, acc) {
+            (h[synsetId] || []).forEach((childId) => collectSynsetsUnderHyponyms(childId, acc));
+            acc.add(synsetId);
+        }
+        function synsetsForWord(word) {
+            const acc = new Set();
+            (sin[word] || []).forEach((sid) => collectSynsetsUnderHyponyms(sid, acc));
+            return acc;
+        }
+
         let a = [...new Set([...b.words.split(/\s*\,\s*/)
-            .map(w => f(w, new Set()))
-            .map(ids => new Set([...ids].flatMap(id => cos[id] || [])))
+            .map((w) => synsetsForWord(w))
+            .map((ids) => new Set([...ids].flatMap((id) => cos[id] || [])))
             .reduce((a, b) => a.intersection(b))])];
 
         if (b.k == 0) {
